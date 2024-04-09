@@ -26,4 +26,4 @@ def entropy_pdf_analyzer(target_entropies: List):
 
         results.append(result)
 
-    generate_results_csv(results, "results_e2gd")
+    generate_results_csv(results, "synthetic", "results_e2gd")

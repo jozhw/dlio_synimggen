@@ -18,5 +18,5 @@ def main(imgs_data, compressed_file_types):
 
 
 if __name__ == "__main__":
-    imgs_data = "./results/polaris/data/2024-04-09/results_imagenet_rand_100.csv"
+    imgs_data = "./results/polaris/2024-04-09/results_imagenet_rand_100.csv"
     main(imgs_data, COMPRESSED_FILE_TYPES)

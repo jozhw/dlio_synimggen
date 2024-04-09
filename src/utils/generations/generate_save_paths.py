@@ -28,7 +28,7 @@ def generate_compressed_img_save_paths(
 
 
 def generate_save_result_data_path(img_source: str, date: str) -> str:
-    save_path: str = "./results/{}/data/{}".format(img_source, date)
+    save_path: str = "./results/{}/{}".format(img_source, date)
 
     os.makedirs(save_path, exist_ok=True)
     return save_path

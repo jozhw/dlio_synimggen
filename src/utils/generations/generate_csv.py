@@ -6,7 +6,7 @@ from typing import Dict, List
 
 def generate_results_csv(results: List[Dict], img_source: str, fname: str) -> None:
     current_date: str = datetime.now().strftime("%Y-%m-%d")
-    path: str = "results/{}/data/{}".format(img_source, current_date)
+    path: str = "results/{}/{}".format(img_source, current_date)
     if not os.path.exists(path):
         os.makedirs(path)
     save_file_path: str = os.path.join(path, fname + ".csv")
