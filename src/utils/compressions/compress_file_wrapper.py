@@ -4,7 +4,7 @@ from utils.compressions.compress_to_jpg import compress_to_jpg
 from utils.compressions.compress_to_npz import compress_to_npz
 
 
-def compress_files_wrapper(
+def compress_file_wrapper(
     file_type: str,
     compressed_image_path: str,
     image: np.ndarray,

@@ -5,7 +5,7 @@ import numpy as np
 
 from utils.calculations.calculate_compression_ratio import calculate_compression_ratio
 from utils.calculations.calculate_entropy import calculate_entropy, count_occurrences
-from utils.compressions.compress_files_wrapper import compress_files_wrapper
+from utils.compressions.compress_file_wrapper import compress_file_wrapper
 from utils.deletions.delete_file import delete_file
 
 """
@@ -43,7 +43,7 @@ def calculate_img_data(
             f"{file_name}.{file_type}",
         )
 
-        compress_files_wrapper(file_type, compressed_image_path, image)
+        compress_file_wrapper(file_type, compressed_image_path, image)
 
         # calculate the compression ratio
         compression_ratio: float = calculate_compression_ratio(
