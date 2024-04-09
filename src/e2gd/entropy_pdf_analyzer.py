@@ -17,12 +17,12 @@ def entropy_pdf_analyzer(target_entropies: List):
         est_std = entropy_calculate_std(target_entropy)
         pdf = generate_pdf(std=est_std)
         est_entropy = pdf_calculate_entropy(pdf)
-        entropy_diff = abs(est_entropy - target_entropy)
+        est_target_entropy_ratio = est_entropy / target_entropy
 
         result["target_entropy"] = target_entropy
         result["estimated_std"] = est_std
         result["estimated_entropy"] = est_entropy
-        result["entropy_difference"] = entropy_diff
+        result["est_target_entropy_ratio"] = est_target_entropy_ratio
 
         results.append(result)
 
