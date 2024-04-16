@@ -60,6 +60,7 @@ class ImageGen:
             original_width: int = row.at["uncompressed_width"]
             original_height: int = row.at["uncompressed_height"]
             dimensions: Tuple[int, int, int] = (original_width, original_height, 3)
+            mean: int = row.at["mean_intensity_value"]
 
             # synthetics
             syn_file_name: str = "synthetic_" + file_name
@@ -68,7 +69,7 @@ class ImageGen:
 
             # generate the synthetic image
             synthetic_img: np.ndarray = generate_synthetic_image(
-                dimensions, calculated_std
+                dimensions, calculated_std, mean
             )
 
             syn_calculations: Dict[str, Any] = calculate_img_data(
@@ -96,6 +97,8 @@ class ImageGen:
             syn_calculations["npz_compressed_synthetic_original_ratio"] = (
                 npz_compressed_synthetic_original_ratio
             )
+
+            syn_calculations["mean_used"] = mean
 
             results.append(syn_calculations)
 

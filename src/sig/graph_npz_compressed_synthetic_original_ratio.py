@@ -40,5 +40,5 @@ def graph_npz_compressed_synthetic_original_ratio(data_path: str):
 
 if __name__ == "__main__":
 
-    data_path = "./results/synthetic/data/2024-04-09/synthetic_imgs_results.csv"
+    data_path = "./results/synthetic/2024-04-16/synthetic_imgs_results.csv"
     graph_npz_compressed_synthetic_original_ratio(data_path)
