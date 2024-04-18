@@ -7,13 +7,13 @@ import pandas as pd
 from utils.calculations.calculate_img_data import calculate_img_data
 from utils.calculations.entropy_calculate_std import entropy_calculate_std
 from utils.generations.generate_csv import generate_results_csv
-from utils.generations.generate_pdf import generate_pdf
 from utils.generations.generate_save_paths import (
     generate_compressed_img_save_paths,
     generate_save_result_data_path,
 )
 from utils.generations.generate_synthetic_image import (
     generate_adjusted_synthetic_image,
+    generate_gaussian_blur,
     generate_synthetic_image,
 )
 from utils.setting.set_date import set_date
@@ -85,7 +85,9 @@ class ImageGen:
 
             # this will only calculate using the overall entropy
             # calculated_std: float = entropy_calculate_std(original_entropy)
-            # synthetic_img: np.ndarray = generate_synthetic_image(dimensions, calculated_std, mean=mean)
+            # synthetic_img: np.ndarray = generate_synthetic_image(
+            #    dimensions, calculated_std, mean=mean
+            # )
 
             red_std: float = entropy_calculate_std(red_channel_entropy)
             green_std: float = entropy_calculate_std(green_channel_entropy)
