@@ -12,7 +12,10 @@ from utils.generations.generate_save_paths import (
     generate_compressed_img_save_paths,
     generate_save_result_data_path,
 )
-from utils.generations.generate_synthetic_image import generate_synthetic_image
+from utils.generations.generate_synthetic_image import (
+    generate_adjusted_synthetic_image,
+    generate_synthetic_image,
+)
 from utils.setting.set_date import set_date
 
 
@@ -62,14 +65,36 @@ class ImageGen:
             dimensions: Tuple[int, int, int] = (original_width, original_height, 3)
             mean: int = row.at["mean_intensity_value"]
 
+            red_channel_mean: int = row.at["red_mean_intensity_value"]
+            red_channel_entropy: float = row.at["red_entropy_intensity_value"]
+
+            green_channel_mean: int = row.at["green_mean_intensity_value"]
+            green_channel_entropy: float = row.at["green_entropy_intensity_value"]
+
+            blue_channel_mean: int = row.at["blue_mean_intensity_value"]
+            blue_channel_entropy: float = row.at["blue_entropy_intensity_value"]
+
+            channel_means: Tuple[int, int, int] = (
+                red_channel_mean,
+                green_channel_mean,
+                blue_channel_mean,
+            )
+
             # synthetics
             syn_file_name: str = "synthetic_" + file_name
 
-            calculated_std: float = entropy_calculate_std(original_entropy)
+            # this will only calculate using the overall entropy
+            # calculated_std: float = entropy_calculate_std(original_entropy)
+
+            red_std: float = entropy_calculate_std(red_channel_entropy)
+            green_std: float = entropy_calculate_std(green_channel_entropy)
+            blue_std: float = entropy_calculate_std(blue_channel_entropy)
+
+            calculated_stds: Tuple[float, float, float] = (red_std, green_std, blue_std)
 
             # generate the synthetic image
-            synthetic_img: np.ndarray = generate_synthetic_image(
-                dimensions, calculated_std, mean
+            synthetic_img: np.ndarray = generate_adjusted_synthetic_image(
+                dimensions, calculated_stds, channel_means
             )
 
             syn_calculations: Dict[str, Any] = calculate_img_data(
