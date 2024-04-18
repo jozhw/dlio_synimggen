@@ -85,6 +85,7 @@ class ImageGen:
 
             # this will only calculate using the overall entropy
             # calculated_std: float = entropy_calculate_std(original_entropy)
+            # synthetic_img: np.ndarray = generate_synthetic_image(dimensions, calculated_std, mean=mean)
 
             red_std: float = entropy_calculate_std(red_channel_entropy)
             green_std: float = entropy_calculate_std(green_channel_entropy)
@@ -124,6 +125,10 @@ class ImageGen:
             )
 
             syn_calculations["mean_used"] = mean
+
+            syn_calculations["original_npz_compressed_image_size"] = (
+                original_npz_compressed_image_size
+            )
 
             results.append(syn_calculations)
 
