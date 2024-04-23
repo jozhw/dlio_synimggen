@@ -5,7 +5,7 @@ from scipy.stats import norm
 from skimage.filters import gaussian
 
 
-def generate_intensity_values(mean, std, size) -> np.ndarray:
+def generate_intensity_values(mean, std, size: int) -> np.ndarray:
     """
     Generate a NumPy array of the given size with random integer values from a normal distribution
     with the specified mean and standard deviation, within the range [0, 255].

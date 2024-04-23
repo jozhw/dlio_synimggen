@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
+from mpi4py import MPI
 
 from utils.calculations.calculate_img_data import calculate_img_data
 from utils.calculations.entropy_calculate_std import entropy_calculate_std
@@ -53,25 +54,41 @@ class ImageGen:
     """
 
     def gsid(self) -> None:
+        comm = MPI.COMM_WORLD
+        rank = comm.Get_rank()
+        size = comm.Get_size()
+
+        # Broadcast the DataFrame to all processes
+        if rank == 0:
+            df_imgs_to_broadcast = self.df_imgs
+        else:
+            df_imgs_to_broadcast = None
+        self.df_imgs = comm.bcast(df_imgs_to_broadcast, root=0)
+
+        num_rows = len(self.df_imgs)
+        rows_per_process = num_rows // size
+        start = rank * rows_per_process
+        end = start + rows_per_process if rank != size - 1 else num_rows
+
         results: List[Dict[str, Any]] = []
-        for _, row in self.df_imgs.iterrows():
+        for _, row in self.df_imgs.iloc[start:end].iterrows():
             file_name: str = row.at["file_name"]
             original_entropy: float = row.at["entropy"]
             original_npz_compressed_image_size: int = row.at[
                 "npz_compressed_image_size"
             ]
-            original_width: int = row.at["uncompressed_width"]
-            original_height: int = row.at["uncompressed_height"]
+            original_width: int = int(row.at["uncompressed_width"])
+            original_height: int = int(row.at["uncompressed_height"])
             dimensions: Tuple[int, int, int] = (original_width, original_height, 3)
-            mean: int = row.at["mean_intensity_value"]
+            mean: int = int(row.at["mean_intensity_value"])
 
-            red_channel_mean: int = row.at["red_mean_intensity_value"]
+            red_channel_mean: int = int(row.at["red_mean_intensity_value"])
             red_channel_entropy: float = row.at["red_entropy_intensity_value"]
 
-            green_channel_mean: int = row.at["green_mean_intensity_value"]
+            green_channel_mean: int = int(row.at["green_mean_intensity_value"])
             green_channel_entropy: float = row.at["green_entropy_intensity_value"]
 
-            blue_channel_mean: int = row.at["blue_mean_intensity_value"]
+            blue_channel_mean: int = int(row.at["blue_mean_intensity_value"])
             blue_channel_entropy: float = row.at["blue_entropy_intensity_value"]
 
             channel_means: Tuple[int, int, int] = (
@@ -81,7 +98,7 @@ class ImageGen:
             )
 
             # synthetics
-            syn_file_name: str = "synthetic_" + file_name
+            syn_file_name: str = "synthetic_" + str(file_name)
 
             # this will only calculate using the overall entropy
             # calculated_std: float = entropy_calculate_std(original_entropy)
@@ -134,4 +151,13 @@ class ImageGen:
 
             results.append(syn_calculations)
 
-        generate_results_csv(results, self.img_source, "synthetic_imgs_results")
+        gathered_results = comm.gather(results, root=0)
+
+        if rank == 0:
+            if gathered_results is not None:
+                flat_results = [
+                    result for sublist in gathered_results for result in sublist
+                ]
+                generate_results_csv(
+                    flat_results, self.img_source, "synthetic_imgs_results"
+                )
