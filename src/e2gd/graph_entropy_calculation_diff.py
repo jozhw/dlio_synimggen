@@ -42,5 +42,5 @@ def graph_entropy_calculation_diff(data_path: str):
 
 
 if __name__ == "__main__":
-    data_path = "./results/synthetic/2024-04-09/results_e2gd.csv"
+    data_path = "./results/synthetic/2024-04-23/results_e2gd.csv"
     graph_entropy_calculation_diff(data_path)
