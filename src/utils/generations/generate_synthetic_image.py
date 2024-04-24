@@ -20,6 +20,19 @@ def generate_intensity_values(mean, std, size: int) -> np.ndarray:
     return integer_values.astype(np.uint8)
 
 
+def generate_poisson_intensity_values(mean, std, size) -> np.ndarray:
+    rng = np.random.default_rng()
+
+    intensity_values = np.clip(rng.poisson(mean, size).astype(np.uint8), 0, 255)
+
+    if len(intensity_values) < size:
+        size_diff = size - len(intensity_values)
+        array = generate_intensity_values(mean, std, size_diff)
+        intensity_values = np.concatenate(intensity_values, array)
+
+    return intensity_values
+
+
 def generate_synthetic_image(
     img_dimensions: Tuple[int, int, int], std, mean: float = 127.0
 ) -> np.ndarray:
@@ -46,9 +59,15 @@ def generate_adjusted_synthetic_image(
     height: int = img_dimensions[1]
     channel_size: int = width * height
 
-    red_channel: np.ndarray = generate_intensity_values(mean[0], std[0], channel_size)
-    green_channel: np.ndarray = generate_intensity_values(mean[1], std[1], channel_size)
-    blue_channel: np.ndarray = generate_intensity_values(mean[2], std[2], channel_size)
+    red_channel: np.ndarray = generate_poisson_intensity_values(
+        mean[0], std[0], channel_size
+    )
+    green_channel: np.ndarray = generate_poisson_intensity_values(
+        mean[1], std[0], channel_size
+    )
+    blue_channel: np.ndarray = generate_poisson_intensity_values(
+        mean[2], std[2], channel_size
+    )
 
     processed_synthetic_img: np.ndarray = np.stack(
         (red_channel, green_channel, blue_channel), axis=-1, dtype=np.uint8

@@ -3,6 +3,15 @@ from typing import List
 import numpy as np
 
 
+def mean_error(actual_values: List[float], ideal_value: float = 1.0):
+    size = len(actual_values)
+    ideal_values: List[float] = [ideal_value] * size
+    errors = np.array(actual_values) - np.array(ideal_values)
+    mean_error = np.sum(errors) / size
+
+    return mean_error
+
+
 def mean_absolute_error(actual_values: List[float], ideal_value: float = 1.0):
     size = len(actual_values)
     ideal_values: List[float] = [ideal_value] * size
