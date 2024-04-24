@@ -21,16 +21,18 @@ def graph_npz_compressed_synthetic_original_ratio(data_path: str):
     compression_ratio = df["npz_compressed_synthetic_original_ratio"]
     num_rows = df.shape[0]
 
-    fname = "npz_compressed_synthetic_original_ratio_plot_{}.png".format(num_rows)
+    fname = "histogram_npz_compressed_synthetic_original_ratio_plot_{}.png".format(
+        num_rows
+    )
     plt.figure(figsize=(12, 8))
-    plt.scatter(df.index, compression_ratio, color="blue", alpha=0.5)
+    plt.hist(compression_ratio, bins=30, color="blue", alpha=0.5)
     plt.title(
         " Synthetic Image Size / Original Image Size for {} NPZ Compressed Images".format(
             num_rows
         )
     )
-    plt.xlabel("index")
-    plt.ylabel("Synthetic/Original NPZ Compressed Image Size Ratio")
+    plt.xlabel("Synthetic/Original NPZ Compressed Image Size Ratio")
+    plt.ylabel("Occurance")
     plt.grid(True)
 
     plt.savefig(os.path.join(save_path, fname))
