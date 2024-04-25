@@ -17,12 +17,13 @@ from utils.calculations.calculate_errors import (
 )
 
 DATA = [
-    "results/synthetic/2024-04-18/synthetic_imgs_results.csv",
-    "results/synthetic/2024-04-18/synthetic_imgs_adjusted_entropy_and_mean_results.csv",
-    "results/synthetic/2024-04-19/synthetic_imgs_results.csv",
-    "results/synthetic/2024-04-19/synthetic_imgs_adjusted_entropy_and_mean_results.csv",
-    "results/synthetic/2024-04-24/synthetic_imgs_results.csv",
-    "results/synthetic/2024-04-25/synthetic_imgs_results.csv",
+    # "results/synthetic/2024-04-18/synthetic_imgs_results.csv",
+    # "results/synthetic/2024-04-18/synthetic_imgs_adjusted_entropy_and_mean_results.csv",
+    # "results/synthetic/2024-04-19/synthetic_imgs_results.csv",
+    # "results/synthetic/2024-04-19/synthetic_imgs_adjusted_entropy_and_mean_results.csv",
+    # "results/synthetic/2024-04-24/synthetic_imgs_results.csv",
+    "results/synthetic/2024-04-25/polaris_synthetic_imgs_results.csv",
+    "results/synthetic/2024-04-25/local_synthetic_imgs_results.csv",
 ]
 
 
