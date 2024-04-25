@@ -1,6 +1,7 @@
 from typing import List
 
 import numpy as np
+import pandas as pd
 
 
 def mean_absolute_error(actual_values: List[float], ideal_value: float = 1.0):
@@ -24,3 +25,20 @@ def mean_error_rate(actual_values: List[int], ground_truth_values: List[int]):
         * 100
     )
     return np.mean(error_rate)
+
+
+def npz_compressed_sums(path_to_original_data, path_to_synthetic_data):
+    odf = pd.read_csv(path_to_original_data)
+    sdf = pd.read_csv(path_to_synthetic_data)
+
+    num_files = len(odf["npz_compressed_image_size"])
+
+    if num_files != len(sdf["npz_compressed_image_size"]):
+        raise ValueError("Wrong dataset")
+
+    sum_ocompressed_size = sum(odf["npz_compressed_image_size"])
+    sum_scompressed_size = sum(sdf["npz_compressed_image_size"])
+
+    diff = sum_ocompressed_size - sum_scompressed_size
+
+    return sum_ocompressed_size, sum_scompressed_size, diff, num_files
