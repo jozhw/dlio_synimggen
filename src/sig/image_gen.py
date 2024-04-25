@@ -91,6 +91,12 @@ class ImageGen:
             blue_channel_mean: int = int(row.at["blue_mean_intensity_value"])
             blue_channel_entropy: float = row.at["blue_entropy_intensity_value"]
 
+            channel_entropies: Tuple[float, float, float] = (
+                red_channel_entropy,
+                green_channel_entropy,
+                blue_channel_entropy,
+            )
+
             channel_means: Tuple[int, int, int] = (
                 red_channel_mean,
                 green_channel_mean,
@@ -114,7 +120,7 @@ class ImageGen:
 
             # generate the synthetic image
             synthetic_img: np.ndarray = generate_adjusted_synthetic_image(
-                dimensions, calculated_stds, channel_means
+                dimensions, calculated_stds, channel_means, channel_entropies
             )
 
             syn_calculations: Dict[str, Any] = calculate_img_data(

@@ -22,6 +22,7 @@ DATA = [
     "results/synthetic/2024-04-19/synthetic_imgs_results.csv",
     "results/synthetic/2024-04-19/synthetic_imgs_adjusted_entropy_and_mean_results.csv",
     "results/synthetic/2024-04-24/synthetic_imgs_results.csv",
+    "results/synthetic/2024-04-25/synthetic_imgs_results.csv",
 ]
 
 
