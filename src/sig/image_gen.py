@@ -14,7 +14,6 @@ from utils.generations.generate_save_paths import (
 )
 from utils.generations.generate_synthetic_image import (
     generate_adjusted_synthetic_image,
-    generate_gaussian_blur,
     generate_synthetic_image,
 )
 from utils.setting.set_date import set_date

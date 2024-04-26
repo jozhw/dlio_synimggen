@@ -3,7 +3,6 @@ from typing import Tuple
 
 import numpy as np
 from scipy.stats import norm
-from skimage.filters import gaussian
 
 
 def sigmoid(x, x0, k):
@@ -157,9 +156,3 @@ def generate_adjusted_synthetic_image(
     processed_synthetic_img = processed_synthetic_img.reshape((width, height, 3))
 
     return processed_synthetic_img
-
-
-def generate_gaussian_blur(image):
-    gaussian_blurred_image = gaussian(image, sigma=1, mode="constant", cval=0.0)
-
-    return gaussian_blurred_image
