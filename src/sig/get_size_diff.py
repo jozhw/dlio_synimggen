@@ -13,8 +13,8 @@ sys.path.append(project_root)
 from utils.calculations.calculate_errors import npz_compressed_sums
 
 # O_PATH = "results/polaris/2024-04-19/results_imagenet_rand_1000.csv"
-O_PATH = "results/local/2024-04-02/results_all_local_imgs_paths_on_2024-04-02.csv"
-S_PATH = "results/synthetic/2024-04-25/local_synthetic_imgs_results.csv"
+O_PATH = "results/polaris/2024-04-26/results_imagenet_rand_300000.csv"
+S_PATH = "results/synthetic/2024-04-26/synthetic_imgs_results.csv"
 
 
 if __name__ == "__main__":
@@ -35,3 +35,4 @@ if __name__ == "__main__":
             num_files, diff_size
         )
     )
+    print("The difference ratio is {}".format(s_size / o_size))
