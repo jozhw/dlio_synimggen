@@ -25,7 +25,7 @@ def graph_npz_compressed_synthetic_original_ratio(data_path: str):
         num_rows
     )
     plt.figure(figsize=(12, 8))
-    plt.hist(compression_ratio, bins=30, range=(0, 5), color="blue", alpha=0.5)
+    plt.hist(compression_ratio, bins=15, range=(0, 3), color="blue", alpha=0.5)
     plt.title(
         " Synthetic Image Size / Original Image Size for {} NPZ Compressed Images".format(
             num_rows
