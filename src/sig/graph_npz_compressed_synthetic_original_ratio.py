@@ -9,7 +9,8 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.append(project_root)
 
-from utils.generations.generate_save_paths import generate_save_result_plot_path
+from utils.generations.generate_save_paths import \
+    generate_save_result_plot_path
 from utils.setting.set_date import set_date
 
 
@@ -40,5 +41,5 @@ def graph_npz_compressed_synthetic_original_ratio(data_path: str):
 
 if __name__ == "__main__":
 
-    data_path = "./results/synthetic/2024-04-25/synthetic_imgs_results.csv"
+    data_path = "./results/synthetic/2024-04-26/synthetic_imgs_results.csv"
     graph_npz_compressed_synthetic_original_ratio(data_path)
