@@ -76,6 +76,8 @@ class ImageGen:
             original_npz_compressed_image_size: int = row.at[
                 "npz_compressed_image_size"
             ]
+            original_size = row.at["uncompressed_size"]
+            original_jpg_compressed_size = row.at["jpg_compressed_image_size"]
             original_width: int = int(row.at["uncompressed_width"])
             original_height: int = int(row.at["uncompressed_height"])
             dimensions: Tuple[int, int, int] = (original_width, original_height, 3)
@@ -119,7 +121,7 @@ class ImageGen:
 
             # generate the synthetic image
             synthetic_img: np.ndarray = generate_adjusted_synthetic_image(
-                dimensions, calculated_stds, channel_means, channel_entropies
+                dimensions, channel_means, channel_entropies
             )
 
             syn_calculations: Dict[str, Any] = calculate_img_data(
@@ -146,6 +148,11 @@ class ImageGen:
             )
             syn_calculations["npz_compressed_synthetic_original_ratio"] = (
                 npz_compressed_synthetic_original_ratio
+            )
+
+            syn_calculations["jpg_compressed_synthetic_original_ratio"] = (
+                syn_calculations["jpg_compressed_image_size"]
+                / original_jpg_compressed_size
             )
 
             syn_calculations["mean_used"] = mean

@@ -25,7 +25,7 @@ def graph_npz_compressed_synthetic_original_ratio(data_path: str):
         num_rows
     )
     plt.figure(figsize=(12, 8))
-    plt.hist(compression_ratio, bins=15, range=(0, 3), color="blue", alpha=0.5)
+    plt.hist(compression_ratio, bins=50, range=(0, 3), color="blue", alpha=0.5)
     plt.title(
         " Synthetic Image Size / Original Image Size for {} NPZ Compressed Images".format(
             num_rows
@@ -40,7 +40,35 @@ def graph_npz_compressed_synthetic_original_ratio(data_path: str):
     plt.show()
 
 
+def graph_jpg_compressed_synthetic_original_ratio(data_path: str):
+    date = set_date(data_path)
+    save_path = generate_save_result_plot_path(date)
+    df = pd.read_csv(data_path)
+
+    compression_ratio = df["jpg_compressed_synthetic_original_ratio"]
+    num_rows = df.shape[0]
+
+    fname = "histogram_jpg_compressed_synthetic_original_ratio_plot_{}.png".format(
+        num_rows
+    )
+    plt.figure(figsize=(12, 8))
+    plt.hist(compression_ratio, bins=50, range=(0, 3), color="blue", alpha=0.5)
+    plt.title(
+        " Synthetic Image Size / Original Image Size for {} JPG Compressed Images".format(
+            num_rows
+        )
+    )
+    plt.xlabel("Synthetic/Original JPG Compressed Image Size Ratio")
+    plt.ylabel("Occurance")
+    plt.grid(True)
+
+    plt.savefig(os.path.join(save_path, fname))
+
+    plt.show()
+
+
 if __name__ == "__main__":
 
-    data_path = "./results/synthetic/2024-04-26/synthetic_imgs_results.csv"
-    graph_npz_compressed_synthetic_original_ratio(data_path)
+    data_path = "./results/synthetic/2024-05-02/synthetic_imgs_results.csv"
+    # graph_npz_compressed_synthetic_original_ratio(data_path)
+    graph_jpg_compressed_synthetic_original_ratio(data_path)
