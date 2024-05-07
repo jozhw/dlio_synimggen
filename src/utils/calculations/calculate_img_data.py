@@ -32,6 +32,7 @@ def calculate_img_data(
 
     # save entropy to result object
     result["entropy"] = entropy
+    result["uncompressed_size"] = dimensions[0] * dimensions[1] * dimensions[2]
 
     for file_type in compressed_file_types:
 

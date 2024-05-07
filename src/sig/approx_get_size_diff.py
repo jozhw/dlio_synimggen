@@ -22,14 +22,40 @@ if __name__ == "__main__":
     n = 1000
     num_files = n
     odf = pd.read_csv(O_PATH)
+
     osize_column = odf["npz_compressed_image_size"]
     sample_osize = osize_column.sample(n)
     o_size = sum(sample_osize)
 
+    uosize_column = odf["uncompressed_size"]
+    sample_uosize = uosize_column.sample(n)
+    uo_size = sum(sample_uosize)
+
     sdf = pd.read_csv(S_PATH)
     s_size = sum(sdf["npz_compressed_image_size"])
+    us_size = sum(sdf["uncompressed_size"])
+
+    udiff_size = abs(uo_size - us_size)
 
     diff_size = abs(o_size - s_size)
+
+    print(
+        "The original total uncompressed size in bytes for {} images is: {}".format(
+            num_files, uo_size
+        )
+    )
+
+    print(
+        "The synthetic total uncompressed size in bytes for {} images is: {}".format(
+            num_files, us_size
+        )
+    )
+    print(
+        "The difference in bytes between the total original and synthetic for {} images is: {}".format(
+            num_files, udiff_size
+        )
+    )
+    print("The difference ratio for uncompressed is {}".format(us_size / uo_size))
 
     print(
         "The original total npz compressed size in bytes for {} images is: {}".format(
@@ -42,7 +68,7 @@ if __name__ == "__main__":
         )
     )
     print(
-        "The difference in bytes between the total original and synthetic (original size - synthetic size) for {} images is: {}".format(
+        "The difference in bytes between the total original and synthetic for {} images is: {}".format(
             num_files, diff_size
         )
     )
