@@ -44,7 +44,7 @@ def determine_weights(entropy):
     # if weight_poisson_gaussian + weight_singular + weight_uniform != 1:
     #    raise ValueError("Weight should equal 1.0")
 
-    return weight_uniform, weight_singular, weight_poisson, weight_gaussian
+    return weight_uniform, weight_singular, weight_poisson
 
 
 def generate_uniform_intensity_values(size) -> np.ndarray:
@@ -73,43 +73,42 @@ def generate_gaussian_intensity_values(mean, std, size: int) -> np.ndarray:
     return integer_values.astype(np.uint8)
 
 
-def generate_poisson_intensity_values(mean, std, size) -> np.ndarray:
+def generate_poisson_intensity_values(mean, size) -> np.ndarray:
     rng = np.random.default_rng()
 
     intensity_values = np.clip(rng.poisson(mean, size).astype(np.uint8), 0, 255)
 
-    if len(intensity_values) < size:
-        size_diff = size - len(intensity_values)
-        array = generate_gaussian_intensity_values(mean, std, size_diff)
-        intensity_values = np.concatenate((intensity_values, array))
-
     return intensity_values
 
 
-def generate_intensity_values(mean, std, size, entropy):
-    uniform_weight, singular_weight, poisson_gaussian_weight, gaussian_weight = (
-        determine_weights(entropy)
-    )
+def generate_intensity_values(mean, size, entropy):
+    uniform_weight, singular_weight, poisson_weight = determine_weights(entropy)
 
-    poission_size = math.floor(poisson_gaussian_weight * size)
+    poission_size = math.floor(poisson_weight * size)
 
     uniform_size = math.floor(uniform_weight * size)
 
-    gaussian_size = math.floor(gaussian_weight * size)
+    singular_size = size - poission_size - uniform_size
 
-    singular_size = size - poission_size - uniform_size - gaussian_size
-
-    if poission_size + uniform_size + singular_size + gaussian_size != size:
+    if poission_size + uniform_size + singular_size != size:
         raise ValueError("Total size discrepancy")
 
-    poission_dist = generate_poisson_intensity_values(mean, std, poission_size)
+    poission_dist = generate_poisson_intensity_values(mean, poission_size)
     uniform_dist = generate_uniform_intensity_values(uniform_size)
     singular_dist = generate_singular_intensity_values(singular_size, mean)
-    gaussian_dist = generate_gaussian_intensity_values(mean, std, gaussian_size)
 
-    dis = np.concatenate((poission_dist, uniform_dist, singular_dist, gaussian_dist))
+    dis = np.concatenate((poission_dist, uniform_dist, singular_dist))
 
     return dis
+
+
+def generate_approx_synthetic_image(entropy, mean, dim):
+
+    size = dim[0] * dim[1] * dim[2]
+    synthetic_image = generate_intensity_values(mean, size, entropy)
+    processed_synthetic_img = synthetic_image.reshape(dim)
+
+    return processed_synthetic_img
 
 
 def generate_synthetic_image(
@@ -131,7 +130,6 @@ def generate_synthetic_image(
 
 def generate_adjusted_synthetic_image(
     img_dimensions: Tuple[int, int, int],
-    stds: Tuple[float, float, float],
     means: Tuple[float, float, float],
     entropies: Tuple[float, float, float],
 ) -> np.ndarray:
@@ -140,13 +138,13 @@ def generate_adjusted_synthetic_image(
     channel_size: int = width * height
 
     red_channel: np.ndarray = generate_intensity_values(
-        means[0], stds[0], channel_size, entropies[0]
+        means[0], channel_size, entropies[0]
     )
     green_channel: np.ndarray = generate_intensity_values(
-        means[1], stds[0], channel_size, entropies[1]
+        means[1], channel_size, entropies[1]
     )
     blue_channel: np.ndarray = generate_intensity_values(
-        means[2], stds[2], channel_size, entropies[2]
+        means[2], channel_size, entropies[2]
     )
 
     processed_synthetic_img: np.ndarray = np.stack(

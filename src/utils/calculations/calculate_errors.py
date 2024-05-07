@@ -42,3 +42,20 @@ def npz_compressed_sums(path_to_original_data, path_to_synthetic_data):
     diff = sum_ocompressed_size - sum_scompressed_size
 
     return sum_ocompressed_size, sum_scompressed_size, diff, num_files
+
+
+def jpg_sums(path_to_original_data, path_to_synthetic_data):
+    odf = pd.read_csv(path_to_original_data)
+    sdf = pd.read_csv(path_to_synthetic_data)
+
+    num_files = len(odf["jpg_compressed_image_size"])
+
+    if num_files != len(sdf["jpg_compressed_image_size"]):
+        raise ValueError("Wrong dataset")
+
+    sum_ocompressed_size = sum(odf["jpg_compressed_image_size"])
+    sum_scompressed_size = sum(sdf["jpg_compressed_image_size"])
+
+    diff = sum_ocompressed_size - sum_scompressed_size
+
+    return sum_ocompressed_size, sum_scompressed_size, diff, num_files

@@ -6,6 +6,8 @@ for highest quality, set the quality to 95 in the Image.save method as recommend
 by the documentation (https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html#)
 
 the jpg uses the jpeg compression algorithm.
+
+the standard quality for the Image.save is 75
 """
 
 
