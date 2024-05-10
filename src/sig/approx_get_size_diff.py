@@ -13,7 +13,7 @@ sys.path.append(project_root)
 from utils.calculations.calculate_errors import jpg_sums, npz_compressed_sums
 
 O_PATH = "results/local/2024-04-02/results_all_local_imgs_paths_on_2024-04-02.csv"
-S_PATH = "results/synthetic/2024-05-07/approx_synthetic_imgs_results.csv"
+S_PATH = "results/synthetic/2024-05-09/approx_synthetic_imgs_results.csv"
 # O_PATH = "results/polaris/2024-04-26/results_imagenet_rand_300000.csv"
 # S_PATH = "results/synthetic/2024-04-26/synthetic_imgs_results.csv"
 

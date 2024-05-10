@@ -111,6 +111,14 @@ def generate_approx_synthetic_image(entropy, mean, dim):
     return processed_synthetic_img
 
 
+def generate_distr_synthetic_image(entropy, mean, x):
+    size = (x**2) * 3
+    synthetic_image = generate_intensity_values(mean, size, entropy)
+    processed_synthetic_img = synthetic_image.reshape((x, x, 3))
+
+    return processed_synthetic_img
+
+
 def generate_synthetic_image(
     img_dimensions: Tuple[int, int, int], std, mean: float = 127.0
 ) -> np.ndarray:

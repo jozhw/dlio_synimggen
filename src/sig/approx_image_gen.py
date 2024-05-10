@@ -84,7 +84,7 @@ class ApproxImageGen:
 
         results: List[Dict[str, Any]] = []
 
-        for index, item in enumerate(self.values[start:end]):
+        for index, item in enumerate(self.values[start:end], start=start):
 
             entropy, mean, dim = item
 

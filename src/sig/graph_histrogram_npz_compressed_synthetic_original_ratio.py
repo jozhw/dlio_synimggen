@@ -52,7 +52,7 @@ def graph_jpg_compressed_synthetic_original_ratio(data_path: str):
         num_rows
     )
     plt.figure(figsize=(12, 8))
-    plt.hist(compression_ratio, bins=50, range=(0, 3), color="blue", alpha=0.5)
+    plt.hist(compression_ratio, bins=50, range=(0, 10), color="blue", alpha=0.5)
     plt.title(
         " Synthetic Image Size / Original Image Size for {} JPG Compressed Images".format(
             num_rows
