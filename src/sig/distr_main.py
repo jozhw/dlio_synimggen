@@ -44,7 +44,7 @@ def main(imgs_data, compressed_file_types):
     img = DistrImageGen(imgs_data, compressed_file_types)
 
     # Call gsid method on each process
-    img.gsid(1000, mean_entropy, x)
+    img.gsid(10000, mean_entropy, x)
 
     # only root process (rank 0) prints the elapsed time
     if rank == 0:
@@ -59,7 +59,5 @@ def main(imgs_data, compressed_file_types):
 
 
 if __name__ == "__main__":
-    imgs_data = (
-        "./results/local/2024-04-02/results_all_local_imgs_paths_on_2024-04-02.csv"
-    )
+    imgs_data = "./results/polaris/2024-04-26/results_imagenet_rand_300000.csv"
     main(imgs_data, COMPRESSED_FILE_TYPES)
