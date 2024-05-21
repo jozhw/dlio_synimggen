@@ -12,8 +12,7 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 project_root = os.path.abspath(os.path.join(current_dir, ".."))
 sys.path.append(project_root)
 
-from utils.generations.generate_save_paths import \
-    generate_save_result_plot_path
+from utils.generations.generate_save_paths import generate_save_result_plot_path
 from utils.setting.set_date import set_date
 
 
@@ -22,16 +21,37 @@ def graph_mean_distr(data_path: str, source):
     save_path = generate_save_result_plot_path(date)
     df = pd.read_csv(data_path)
 
-    compression_ratio = df["mean_intensity_value"]
+    intensity = df["mean_intensity_value"]
     num_rows = df.shape[0]
+    intensity_array = np.array(intensity)
+
+    x = np.mean(intensity_array)
+    var_x = np.var(intensity_array)
+    skew_x = skew(intensity_array)
+    kurtosis_x = kurtosis(intensity_array)
+    std = np.std(intensity_array)
 
     fname = "mean_intensity_value_{}_histogram_{}.png".format(source, num_rows)
     plt.figure(figsize=(12, 8))
-    plt.hist(compression_ratio, bins=50, range=(0, 255), color="blue", alpha=0.5)
+    plt.hist(intensity, bins=50, range=(0, 255), color="blue", alpha=0.5)
     plt.title("Mean Intensity Values for {} Images".format(num_rows))
     plt.xlabel("Mean Intensity Value")
     plt.ylabel("Occurance")
     plt.grid(True)
+
+    # Create a string with the statistical values
+    stats_str = f"Mean: {x:.2f}\nStd Dev: {std:.2f}\nVariance: {var_x:.2f}\nSkewness: {skew_x:.2f}\nKurtosis: {kurtosis_x:.2f}"
+
+    # Add the description box with statistical values
+    plt.text(
+        0.05,
+        0.95,
+        stats_str,
+        transform=plt.gca().transAxes,
+        fontsize=10,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+    )
 
     plt.savefig(os.path.join(save_path, fname))
 
@@ -43,16 +63,36 @@ def graph_entropy_distr(data_path: str, source):
     save_path = generate_save_result_plot_path(date)
     df = pd.read_csv(data_path)
 
-    compression_ratio = df["entropy"]
+    entropy = df["entropy"]
     num_rows = df.shape[0]
+    entropy_array = np.array(entropy)
+
+    x = np.mean(entropy_array)
+    var_x = np.var(entropy_array)
+    skew_x = skew(entropy_array)
+    kurtosis_x = kurtosis(entropy_array)
+    std = np.std(entropy_array)
 
     fname = "entropy_{}_histogram_{}.png".format(source, num_rows)
     plt.figure(figsize=(12, 8))
-    plt.hist(compression_ratio, bins=50, range=(0, 8), color="blue", alpha=0.5)
+    plt.hist(entropy, bins=50, range=(0, 8), color="blue", alpha=0.5)
     plt.title("Entropies for {} Images".format(num_rows))
     plt.xlabel("Entropy")
     plt.ylabel("Occurance")
     plt.grid(True)
+    # Create a string with the statistical values
+    stats_str = f"Mean: {x:.2f}\nStd Dev: {std:.2f}\nVariance: {var_x:.2f}\nSkewness: {skew_x:.2f}\nKurtosis: {kurtosis_x:.2f}"
+
+    # Add the description box with statistical values
+    plt.text(
+        0.05,
+        0.95,
+        stats_str,
+        transform=plt.gca().transAxes,
+        fontsize=10,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+    )
 
     plt.savefig(os.path.join(save_path, fname))
 
@@ -62,35 +102,47 @@ def graph_entropy_distr(data_path: str, source):
 def graph_x_distr(data_path, source):
     date = set_date(data_path)
     save_path = generate_save_result_plot_path(date)
+
     df = pd.read_csv(data_path)
     sizes = df["uncompressed_size"].values
-
     size_array = np.array(sizes)
-
     x_array = np.rint(np.sqrt(size_array / 3))
+
     x = np.mean(x_array)
     var_x = np.var(x_array)
     skew_x = skew(x_array)
     kurtosis_x = kurtosis(x_array)
     std = np.std(x_array)
 
-    print(x)
-    print(var_x)
-    print(skew_x)
-    print(kurtosis_x)
-    print(std)
-
     num_rows = df.shape[0]
-    fname = "x_dimension_{}_histogram_{}.png".format(source, num_rows)
+
+    fname = "{}-{}-x-dimension-histogram.png".format(source, num_rows)
+
     plt.figure(figsize=(12, 8))
-    plt.hist(x_array, bins=100, range=(0, 2000), color="blue", alpha=0.5)
-    plt.title("x dimension for {} Images".format(num_rows))
-    plt.xlabel("x dimension")
-    plt.ylabel("Occurance")
+    n, bins, patches = plt.hist(
+        x_array, bins=100, range=(0, 2000), color="blue", alpha=0.5
+    )
+
+    plt.title("x Dimension for {} Images".format(num_rows))
+    plt.xlabel("x Dimension")
+    plt.ylabel("Occurrence")
     plt.grid(True)
 
-    plt.savefig(os.path.join(save_path, fname))
+    # Create a string with the statistical values
+    stats_str = f"Mean: {x:.2f}\nStd Dev: {std:.2f}\nVariance: {var_x:.2f}\nSkewness: {skew_x:.2f}\nKurtosis: {kurtosis_x:.2f}"
 
+    # Add the description box with statistical values
+    plt.text(
+        0.05,
+        0.95,
+        stats_str,
+        transform=plt.gca().transAxes,
+        fontsize=10,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5),
+    )
+
+    plt.savefig(os.path.join(save_path, fname))
     plt.show()
 
 
@@ -245,11 +297,11 @@ if __name__ == "__main__":
     data_path = "./results/polaris/2024-04-26/results_imagenet_rand_300000.csv"
     graph_entropy_distr(data_path, "polaris")
     graph_mean_distr(data_path, "polaris")
-    graph_x_quantiles_distr(data_path, "polaris")
+    graph_x_distr(data_path, "polaris")
 
     data_path2 = (
         "./results/local/2024-04-02/results_all_local_imgs_paths_on_2024-04-02.csv"
     )
     graph_entropy_distr(data_path2, "local")
     graph_mean_distr(data_path2, "local")
-    graph_x_quantiles_distr(data_path2, "local")
+    graph_x_distr(data_path2, "local")
