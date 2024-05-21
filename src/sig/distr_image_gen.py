@@ -46,18 +46,63 @@ class DistrImageGen:
             self.img_source, self.date
         )
 
-    """
-    gsi = generate synthetic img data
-    """
+    def get_x_occurances(self):
 
-    def gsid(self, n, entropy, x, intensity=127) -> None:
         comm = MPI.COMM_WORLD
         rank = comm.Get_rank()
         size = comm.Get_size()
 
         # Broadcast the DataFrame to all processes
         if rank == 0:
-            values = generate_parameter_dist(n, entropy, x, intensity)
+            df_imgs_to_broadcast = self.df_imgs
+        else:
+            df_imgs_to_broadcast = None
+        self.df_imgs = comm.bcast(df_imgs_to_broadcast, root=0)
+
+        num_rows = len(self.df_imgs)
+        rows_per_process = num_rows // size
+        start = rank * rows_per_process
+        end = start + rows_per_process if rank != size - 1 else num_rows
+
+        x_occurances: Dict[int, int] = {}
+
+        for _, row in self.df_imgs.iloc[start:end].iterrows():
+            original_size = int(row.at["uncompressed_size"])
+            x = int(np.sqrt(original_size / 3))
+
+            if x in x_occurances:
+                x_occurances[x] += 1
+            else:
+                x_occurances[x] = 1
+
+        gathered_x = comm.gather(x_occurances, root=0)
+
+        return gathered_x
+
+    """
+    gsi = generate synthetic img data
+    """
+
+    # instead of the skew, lowerbound, and upperbound, will use occurances instead
+
+    def gsid(self, n, entropy, intensity=127) -> None:
+        comm = MPI.COMM_WORLD
+        rank = comm.Get_rank()
+        size = comm.Get_size()
+
+        # Broadcast the DataFrame to all processes
+        if rank == 0:
+            x_occurances = {}
+            for _, row in self.df_imgs.iterrows():
+                original_size = int(row.at["uncompressed_size"])
+                x = int(np.sqrt(original_size / 3))
+
+                if x in x_occurances:
+                    x_occurances[x] += 1
+                else:
+                    x_occurances[x] = 1
+
+            values = generate_parameter_dist(n, entropy, x_occurances, intensity)
 
         else:
             values = None
@@ -95,6 +140,8 @@ class DistrImageGen:
             syn_calculations["entropy_used"] = entropy
             syn_calculations["mean_used"] = mean
             syn_calculations["dim_used"] = x
+
+            print(syn_calculations)
 
             results.append(syn_calculations)
 

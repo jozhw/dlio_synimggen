@@ -3,7 +3,9 @@ import os
 import sys
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+from scipy.stats import kurtosis, poisson, skew
 
 # Add the project's root directory to the Python path
 current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -57,6 +59,149 @@ def graph_entropy_distr(data_path: str, source):
     plt.show()
 
 
+def graph_x_distr(data_path, source):
+    date = set_date(data_path)
+    save_path = generate_save_result_plot_path(date)
+    df = pd.read_csv(data_path)
+    sizes = df["uncompressed_size"].values
+
+    size_array = np.array(sizes)
+
+    x_array = np.rint(np.sqrt(size_array / 3))
+    x = np.mean(x_array)
+    var_x = np.var(x_array)
+    skew_x = skew(x_array)
+    kurtosis_x = kurtosis(x_array)
+    std = np.std(x_array)
+
+    print(x)
+    print(var_x)
+    print(skew_x)
+    print(kurtosis_x)
+    print(std)
+
+    num_rows = df.shape[0]
+    fname = "x_dimension_{}_histogram_{}.png".format(source, num_rows)
+    plt.figure(figsize=(12, 8))
+    plt.hist(x_array, bins=100, range=(0, 2000), color="blue", alpha=0.5)
+    plt.title("x dimension for {} Images".format(num_rows))
+    plt.xlabel("x dimension")
+    plt.ylabel("Occurance")
+    plt.grid(True)
+
+    plt.savefig(os.path.join(save_path, fname))
+
+    plt.show()
+
+
+def graph_x_quantiles_distr(data_path, source):
+    date = set_date(data_path)
+    save_path = generate_save_result_plot_path(date)
+    df = pd.read_csv(data_path)
+    lower_percentile = df["uncompressed_size"].quantile(0.25)
+    upper_percentile = df["uncompressed_size"].quantile(0.75)
+    iqr = upper_percentile - lower_percentile
+
+    lower_bound = lower_percentile - (1.5 * iqr)
+
+    if lower_bound < 0:
+        lower_bound = 0
+
+    upper_bound = upper_percentile + (1.5 * iqr)
+
+    column_array = df["uncompressed_size"].values
+    filtered_array = column_array[
+        (column_array >= lower_bound) & (column_array <= upper_bound)
+    ]
+    size_array = np.array(filtered_array)
+
+    x_array = np.rint(np.sqrt(size_array / 3))
+    x = np.mean(x_array)
+    var_x = np.var(x_array)
+    skew_x = skew(x_array)
+    kurtosis_x = kurtosis(x_array)
+    lowerbound = min(x_array)
+    upperbound = max(x_array)
+    std = np.std(x_array)
+
+    print(x)
+    print(var_x)
+    print(skew_x)
+    print(kurtosis_x)
+    print(lowerbound)
+    print(upperbound)
+    print(std)
+
+    num_rows = df.shape[0]
+    fname = "x_dimension_{}_histogram_{}.png".format(source, num_rows)
+    plt.figure(figsize=(12, 8))
+    plt.hist(x_array, bins=100, range=(0, 2000), color="blue", alpha=0.5)
+    plt.title("x dimension for {} Images".format(num_rows))
+    plt.xlabel("x dimension")
+    plt.ylabel("Occurance")
+    plt.grid(True)
+
+    plt.savefig(os.path.join(save_path, fname))
+
+    plt.show()
+
+
+def graph_width_distr(data_path, source):
+
+    date = set_date(data_path)
+    save_path = generate_save_result_plot_path(date)
+    df = pd.read_csv(data_path)
+
+    width = df["uncompressed_width"]
+
+    print(width.mean())
+    print(width.var())
+    print(skew(width))
+
+    num_rows = df.shape[0]
+    fname = "width_dimension_{}_histogram_{}.png".format(source, num_rows)
+    plt.figure(figsize=(12, 8))
+    plt.hist(width, bins=100, range=(0, 2000), color="blue", alpha=0.5)
+    plt.title("width dimension for {} Images".format(num_rows))
+    plt.xlabel("width dimension")
+    plt.ylabel("Occurance")
+    plt.grid(True)
+
+    plt.savefig(os.path.join(save_path, fname))
+
+    plt.show()
+
+
+def graph_height_distr(data_path, source):
+
+    date = set_date(data_path)
+    save_path = generate_save_result_plot_path(date)
+    df = pd.read_csv(data_path)
+
+    width = df["uncompressed_height"]
+    print(width.mean())
+    print(width.var())
+    print(skew(width))
+    num_rows = df.shape[0]
+    fname = "height_dimension_{}_histogram_{}.png".format(source, num_rows)
+    plt.figure(figsize=(12, 8))
+    plt.hist(width, bins=100, range=(0, 2000), color="blue", alpha=0.5)
+
+    # x = np.linspace(0, 2000, 1000)
+    mu = width.mean()
+    x = np.arange(0, 2000)
+
+    plt.plot(x, poisson.pmf(x, mu), label="approximate function")
+    plt.title("height dimension for {} Images".format(num_rows))
+    plt.xlabel("height dimension")
+    plt.ylabel("Occurance")
+    plt.grid(True)
+
+    plt.savefig(os.path.join(save_path, fname))
+
+    plt.show()
+
+
 def graph_size_distr(data_path: str, source):
     date = set_date(data_path)
     save_path = generate_save_result_plot_path(date)
@@ -100,12 +245,11 @@ if __name__ == "__main__":
     data_path = "./results/polaris/2024-04-26/results_imagenet_rand_300000.csv"
     graph_entropy_distr(data_path, "polaris")
     graph_mean_distr(data_path, "polaris")
+    graph_x_quantiles_distr(data_path, "polaris")
 
     data_path2 = (
         "./results/local/2024-04-02/results_all_local_imgs_paths_on_2024-04-02.csv"
     )
     graph_entropy_distr(data_path2, "local")
     graph_mean_distr(data_path2, "local")
-
-    graph_size_distr(data_path, "polaris")
-    graph_size_distr(data_path2, "local")
+    graph_x_quantiles_distr(data_path2, "local")
