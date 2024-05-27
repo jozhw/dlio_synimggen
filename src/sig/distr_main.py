@@ -68,7 +68,7 @@ def main(imgs_data, compressed_file_types):
     # Call gsid method on each process
     # this will be changed to use the x_occurances instead of the x_std, x_skew...
     # make sure to adjust the code to calculate the occurances beforehand
-    img.gsid(1000, mean_entropy)
+    img.gsid(30000, mean_entropy)
 
     comm.Barrier()
 

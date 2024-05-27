@@ -15,11 +15,11 @@ from utils.calculations.calculate_errors import jpg_sums, npz_compressed_sums
 # O_PATH = "results/local/2024-04-02/results_all_local_imgs_paths_on_2024-04-02.csv"
 # S_PATH = "results/synthetic/2024-05-20/approx_synthetic_imgs_results.csv"
 O_PATH = "results/polaris/2024-04-26/results_imagenet_rand_300000.csv"
-S_PATH = "results/synthetic/2024-05-20/approx_synthetic_imgs_results.csv"
+S_PATH = "results/synthetic/2024-05-21/approx_synthetic_imgs_results.csv"
 
 
 if __name__ == "__main__":
-    n = 1000
+    n = 30000
     num_files = n
     odf = pd.read_csv(O_PATH)
 

@@ -141,7 +141,7 @@ class DistrImageGen:
             syn_calculations["mean_used"] = mean
             syn_calculations["dim_used"] = x
 
-            print(syn_calculations)
+            # print(syn_calculations)
 
             results.append(syn_calculations)
 
